@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignIn</title>
+    <link rel="stylesheet" href="Signin.css"/>
+    <script src="https://kit.fontawesome.com/acfd1d1e87.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="right">
+            <a href="home.html">Home</a>
+        </div>
+        <div class="left">
+            <a href="SignUp.html">SignUp</a>
+        </div>
+    </div>
+    <div class="main_container">
+        <h2>SignIn</h2>
+        <form id="signinForm" onsubmit="return validateForm(event)">
+            <div class="details">
+                <label for="username">UserName</label>
+                <div class="input-container">
+                    <i class="fa-solid fa-user"></i>
+                    <input id="username" type="text" placeholder="username" required/>
+                </div>
+            </div> 
+            <div class="details">
+                <label for="emailid">Emailid</label>
+                <div class="input-container">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input id="emailid" type="text" placeholder="emailid" required/>
+                </div>
+            </div>   
+            <div class="details">
+                <button type="submit">Submit</button>
+            </div>   
+            <div class="details">
+                <p>Don't have an account??<a href="SignUp.html">SignUp here</a></p>
+            </div>        
+        </form>
+    </div>
+    <script>
+
+function validateForm(event) {
+    event.preventDefault(); 
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const isSignedIn = users.length > 0;
+
+    if (!isSignedIn) {
+        alert("Please signup before proceeding.");
+        window.location.href = 'Signup.html'; 
+        return;
+    }
+
+    const username = document.getElementById('username').value;
+    const emailid = document.getElementById('emailid').value;
+    if (userAlreadyExists(users, username, emailid)) {
+        window.location.href = 'moviesearch.html'; 
+    } else {
+        alert("User does not exist.");
+    }
+}
+
+function userAlreadyExists(users, username, emailid) {
+    return users.some(user => user.username === username || user.emailid === emailid);
+}
+
+
+   </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp</title>
+    <link rel="stylesheet" href="Signup.css"/>
+    <script src="https://kit.fontawesome.com/acfd1d1e87.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="right">
+            <a href="home.html">Home</a>
+        </div>
+        <div class="left">
+            <a href="Signin.html">SignIn</a>
+        </div>
+    </div>
+    <div id="successMessage" class="success-message"></div>
+    <div class="main_container">
+        <h2>SignUp</h2>
+        <form id="signupForm" onsubmit="return validateForm(event)">
+            <div class="details">
+                <label for="username">UserName</label>
+                <div class="input-container">
+                    <i class="fa-solid fa-user"></i>
+                    <input id="username" type="text" placeholder="username" required/>
+                </div>
+            </div> 
+            <div class="details">
+                <label for="emailid">Emailid</label>
+                <div class="input-container">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input id="emailid" type="email" placeholder="emailid" required/>
+                </div>
+            </div>   
+            <div class="details">
+                <label for="password">Password</label>
+                <div class="input-container">
+                    <i class="fa-solid fa-lock"></i>
+                    <input id="password" type="password" placeholder="password" required pattern="[a-zA-Z0-9]{8,10}"/>
+                </div>
+            </div>     
+            <div class="details">
+                <button type="submit">Submit</button>
+            </div>   
+            <div class="details">
+                <p>Already have an account?? <a href="Signin.html">Signin here</a></p>
+            </div>        
+        </form>
+    </div>
+    <script>
+        function validateForm(event) {
+            event.preventDefault(); 
+
+            const username = document.getElementById('username').value;
+            const emailid = document.getElementById('emailid').value;
+            const password = document.getElementById('password').value;
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            const passwordPattern = /^[a-zA-Z0-9]{8,10}$/;
+
+            if (userAlreadyExists(username, emailid)) {
+                displayMessage("User already exists");
+                return false;
+            }
+             else if (username.trim() === "") {
+                displayMessage("Username is required");
+                return false;
+            } 
+            else if (!emailPattern.test(emailid)) {
+                displayMessage("Please enter a valid email address");
+                return false;
+            }
+            else if (!passwordPattern.test(password)) {
+                displayMessage("Password should have at least 8 characters");
+                return false;
+            }
+            else
+            {  
+                saveUserData(username, emailid, password);
+                displayMessage("SignUp successful!", "success");
+                return true;
+            }
+
+            function userAlreadyExists(username, emailid) {
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                return users.some(user => user.username === username || user.emailid === emailid);
+            }
+
+            function displayMessage(message) {
+                const successMessage = document.getElementById('successMessage');
+                successMessage.textContent = message;
+            }
+
+            function saveUserData(username, emailid, password) {
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                users.push({ username, emailid, password });
+                localStorage.setItem('users', JSON.stringify(users));
+            }       
+
+     document.getElementById('signupForm').addEventListener('submit', validateForm);
+    }
+
+    </script>
+</body>
+</html>
